@@ -1,0 +1,207 @@
+#include <iostream>
+#include <locale.h>
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+
+void rand(int* m, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		m[i] = rand() % 100;
+	}
+}
+
+void vozr(int* m, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		m[i] = i;
+	}
+}
+
+void ubiv(int* m, int size)
+{
+	for (int i = size; i > 0; i--)
+	{
+		m[i] = i;
+	}
+}
+
+void trigle(int* m, int size)
+{
+	for (int i = 0; i < size / 2; i++)
+	{
+		m[i] = i;
+	}
+	for (int i = size / 2; i < size; i++)
+	{
+		m[i] = m[i - 1] - 1;
+	}
+}
+
+void qs(int* mass, int size)
+{
+	int i = 0;
+	int j = size - 1;
+
+	int mid = mass[size / 2];
+	do
+	{
+		while (mass[i] < mid)
+		{
+			i++;
+		}
+		while (mass[j] > mid)
+		{
+			j--;
+		}
+		if (i <= j)
+		{
+			int tmp = mass[i];
+			mass[i] = mass[j];
+			mass[j] = tmp;
+			i++; j--;
+		}
+	} while (i <= j);
+	if (j > 0)
+	{
+		qs(mass, j + 1);
+	}
+	if (i < size)
+	{
+		qs(&mass[i], size - i);
+	}
+}
+
+int compare(const void* x1, const void* x2)
+{
+	return (*(int*)x1 - *(int*)x2);
+}
+
+void shell(int* arr, int n)
+{
+	int i, j, zxc, k;
+	int x;
+
+	for (k = n / 2; k > 0; k /= 2)
+	{
+		for (i = k; i < n; i++)
+		{
+			for (j = i - k; (j >= 0) && arr[j] > arr[j + k]; j = j - k)
+			{
+				x = arr[j];
+				arr[j] = arr[j + k];
+				arr[j + k] = x;
+			}
+		}
+	}
+}
+
+int main()
+{
+	//setlocale(LC_ALL, "Rus");
+	srand(time(NULL));
+	system("chcp 1251");
+	int i, size;
+	scanf_s("%d", &size);
+	
+//РАНДОМНЫЙ
+            int* m;
+	m = (int*)_malloca(size * sizeof(int));
+	rand(m, size);
+	time_t start_time = clock();
+	shell(m, size);
+	time_t end_time = clock();
+	double time = (end_time - start_time) / 1000.0;
+	
+	rand(m, size);
+	time_t start_time1 = clock();
+	qs(m, size);
+	time_t end_time1 = clock();
+	double time1 = (end_time1 - start_time1) / 1000.0;
+	
+	rand(m, size);
+	time_t start_time2 = clock();
+	qsort(m, size, sizeof(int), compare);
+	time_t end_time2 = clock();
+	double time2 = (end_time2 - start_time2) / 1000.0;
+
+//ВОЗРАСТАЮЩИЙ
+	int* m2;
+	m2 = (int*)_malloca(size * sizeof(int));
+
+	vozr(m2, size);
+	time_t start_time3 = clock();
+	shell(m2, size);
+	time_t end_time3 = clock();
+	double time3 = (end_time3 - start_time3) / 1000.0;
+
+	vozr(m2, size);
+	time_t start_time4 = clock();
+	qs(m2, size);
+	time_t end_time4 = clock();
+	double time4 = (end_time4 - start_time4) / 1000.0;
+
+	vozr(m2, size);
+	time_t start_time5 = clock();
+	qsort(m2, size, sizeof(int), compare);
+	time_t end_time5 = clock();
+	double time5 = (end_time5 - start_time5) / 1000.0;
+
+	//УБЫВАЮЩИЙ
+	int* m3;
+	m3 = (int*)_malloca(size * sizeof(int));
+
+	ubiv(m3, size);
+	time_t start_time6 = clock();
+	shell(m3, size);
+	time_t end_time6 = clock();
+	double time6 = (end_time6 - start_time6) / 1000.0;
+
+	ubiv(m3, size);
+	time_t start_time7 = clock();
+	qs(m3, size);
+	time_t end_time7 = clock();
+	double time7 = (end_time7 - start_time7) / 1000.0;
+
+	ubiv(m3, size);
+	time_t start_time8 = clock();
+	qsort(m3, size, sizeof(int), compare);
+	time_t end_time8 = clock();
+	double time8 = (end_time8 - start_time8) / 1000.0;
+
+//ТРЕУГОЛЬНИК
+	int* m4;
+	m4 = (int*)_malloca(size * sizeof(int));
+
+	trigle(m4, size);
+	time_t start_time9 = clock();
+	shell(m4, size);
+	time_t end_time9 = clock();
+	double time9 = (end_time9 - start_time9) / 1000.0;
+
+	trigle(m4, size);
+	time_t start_time10 = clock();
+	qs(m4, size);
+	time_t end_time10 = clock();
+	double time10 = (end_time10 - start_time10) / 1000.0;
+
+	trigle(m4, size);
+	time_t start_time11 = clock();
+	qsort(m4, size, sizeof(int), compare);
+	time_t end_time11 = clock();
+	double time11 = (end_time11 - start_time11) / 1000.0;
+
+	printf("____________________________________________________\n");
+	printf("| Массив     |   Шелл  |    Qs  |   Qs(функция)    |\n");
+	printf("|____________|_________|________|__________________|\n");
+	printf("|Рандомный   |%f |%f|%17f |\n", time, time1, time2);
+	printf("|Возрастающий|%f |%f|%17f |\n", time3, time4, time5);
+	printf("|Убывающий   |%f |%f|%17f |\n", time6, time7, time8);
+	printf("|Треугольный |%f |%f|%17f |\n", time9, time10, time11);
+
+	//getchar();
+	//getchar();
+
+}
